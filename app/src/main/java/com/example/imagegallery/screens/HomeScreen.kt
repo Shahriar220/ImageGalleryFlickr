@@ -56,7 +56,7 @@ fun HomeScreen(
 
             is FlickrResponseState.Error -> {
                 if (!openAlertDialog.value)
-                    AlertDialogExample(
+                    DisplayAlertDialog(
                         onDismissRequest = { openAlertDialog.value = true },
                         dialogTitle = "Error",
                         dialogText = "Something Went Wrong",
