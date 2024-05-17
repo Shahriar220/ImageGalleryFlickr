@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AlertDialogExample(
+fun DisplayAlertDialog(
     onDismissRequest: () -> Unit,
     dialogTitle: String,
     dialogText: String,
