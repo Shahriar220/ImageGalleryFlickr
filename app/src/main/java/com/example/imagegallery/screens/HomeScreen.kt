@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -17,6 +19,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -38,6 +42,7 @@ fun HomeScreen(
     imageViewModel: ImageViewModel = hiltViewModel()
 ) {
     val screenState by imageViewModel.screenState.collectAsState()
+    val openAlertDialog = remember { mutableStateOf(false) }
 
     val onItemClicked = { cardItem: Item ->
         Log.d("ItemClicked", "In card");
@@ -50,8 +55,15 @@ fun HomeScreen(
             }
 
             is FlickrResponseState.Error -> {
-                //todo show an error alert dialog
+                if (!openAlertDialog.value)
+                    AlertDialogExample(
+                        onDismissRequest = { openAlertDialog.value = true },
+                        dialogTitle = "Error",
+                        dialogText = "Something Went Wrong",
+                        icon = Icons.Default.Info
+                    )
             }
+
             is FlickrResponseState.Success -> {
                 val response = (screenState as FlickrResponseState.Success).data
 
