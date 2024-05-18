@@ -3,6 +3,8 @@ package com.example.imagegallery.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.imagegallery.data.response.Item
+import com.example.imagegallery.database.dao.SearchQueryDao
+import com.example.imagegallery.database.entity.SearchEntity
 import com.example.imagegallery.domain.usecase.GetImageUseCase
 import com.example.imagegallery.utils.ResourceState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ImageViewModel @Inject constructor(
-    private val getImageUseCase: GetImageUseCase
+    private val getImageUseCase: GetImageUseCase,
+    private val searchQueryDao: SearchQueryDao
 ) : ViewModel() {
 
     private val _screenState: MutableStateFlow<FlickrResponseState> =
@@ -35,6 +38,9 @@ class ImageViewModel @Inject constructor(
     }
 
     fun filterItems(searchText: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            searchQueryDao.insertQuery(SearchEntity(query = searchText))
+        }
         _searchText.value = searchText
         val filteredItems = if (searchText.isBlank()) {
             allItems
