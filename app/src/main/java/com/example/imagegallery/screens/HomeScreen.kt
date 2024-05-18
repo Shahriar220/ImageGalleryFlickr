@@ -1,7 +1,9 @@
 package com.example.imagegallery.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -11,7 +13,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Card
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -35,6 +39,7 @@ import com.example.imagegallery.viewmodels.ImageViewModel
  * @author Shahriar
  * @since ১৭/৫/২৪ ১০:০২ AM
  */
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
     navController: NavController,
@@ -42,6 +47,17 @@ fun HomeScreen(
 ) {
     val screenState by imageViewModel.screenState.collectAsState()
     val openAlertDialog = remember { mutableStateOf(false) }
+
+    var searchQuery = remember {
+        mutableStateOf("")
+    }
+
+    val onSearchQueryChanged: (String) -> Unit = { query ->
+        searchQuery.value = query
+        imageViewModel.filterItems(query)
+    }
+
+    SearchBar(searchQuery = searchQuery.value, onSearchQueryChanged)
 
     val onItemClicked = { cardItem: Item ->
         navController.currentBackStackEntry?.savedStateHandle?.set(
@@ -51,7 +67,12 @@ fun HomeScreen(
         navController.navigate(Routes.DETAILS_ROUTE)
     }
 
-    Surface(modifier = Modifier.fillMaxWidth()) {
+    Scaffold(
+        modifier = Modifier.padding(10.dp),
+        topBar = {
+            SearchBar(searchQuery = searchQuery.value, onSearchQueryChanged = onSearchQueryChanged)
+        }
+    ) {
         when (screenState) {
             is FlickrResponseState.Loading -> {
                 LoaderScreen()
@@ -72,7 +93,7 @@ fun HomeScreen(
 
                 val responseItem = response.items;
                 if (responseItem != null) {
-                    LazyColumn {
+                    LazyColumn(modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 0.dp)) {
                         items(responseItem) { item ->
                             ShowImageCards(imageItem = item, onItemClicked)
                         }
@@ -80,6 +101,21 @@ fun HomeScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun SearchBar(
+    searchQuery: String,
+    onSearchQueryChanged: (String) -> Unit,
+) {
+    Row(modifier = Modifier.fillMaxWidth()) {
+        TextField(
+            value = searchQuery,
+            onValueChange = onSearchQueryChanged,
+            modifier = Modifier.weight(1f),
+            label = { Text(text = "Enter search query") }
+        )
     }
 }
 
