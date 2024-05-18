@@ -19,8 +19,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -46,31 +44,16 @@ fun HomeScreen(
     imageViewModel: ImageViewModel = hiltViewModel(),
 ) {
     val screenState by imageViewModel.screenState.collectAsState()
-    val openAlertDialog = remember { mutableStateOf(false) }
-
-    var searchQuery = remember {
-        mutableStateOf("")
-    }
+    val searchQuery by imageViewModel.searchText.collectAsState()
 
     val onSearchQueryChanged: (String) -> Unit = { query ->
-        searchQuery.value = query
         imageViewModel.filterItems(query)
-    }
-
-    SearchBar(searchQuery = searchQuery.value, onSearchQueryChanged)
-
-    val onItemClicked = { cardItem: Item ->
-        navController.currentBackStackEntry?.savedStateHandle?.set(
-            key = "item",
-            value = cardItem,
-        )
-        navController.navigate(Routes.DETAILS_ROUTE)
     }
 
     Scaffold(
         modifier = Modifier.padding(10.dp),
         topBar = {
-            SearchBar(searchQuery = searchQuery.value, onSearchQueryChanged = onSearchQueryChanged)
+            SearchBar(searchQuery = searchQuery, onSearchQueryChanged = onSearchQueryChanged)
         }
     ) {
         when (screenState) {
@@ -79,23 +62,27 @@ fun HomeScreen(
             }
 
             is FlickrResponseState.Error -> {
-                if (!openAlertDialog.value)
-                    DisplayAlertDialog(
-                        onDismissRequest = { openAlertDialog.value = true },
-                        dialogTitle = "Error",
-                        dialogText = "Something Went Wrong",
-                        icon = Icons.Default.Info
-                    )
+                DisplayAlertDialog(
+                    onDismissRequest = { /* Handle Dismiss */ },
+                    dialogTitle = "Error",
+                    dialogText = (screenState as FlickrResponseState.Error).errorMessage,
+                    icon = Icons.Default.Info
+                )
             }
 
             is FlickrResponseState.Success -> {
                 val response = (screenState as FlickrResponseState.Success).data
 
-                val responseItem = response.items;
-                if (responseItem != null) {
+                if (response != null) {
                     LazyColumn(modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 0.dp)) {
-                        items(responseItem) { item ->
-                            ShowImageCards(imageItem = item, onItemClicked)
+                        items(response) { item ->
+                            ShowImageCards(imageItem = item, onItemClicked = { cardItem ->
+                                navController.currentBackStackEntry?.savedStateHandle?.set(
+                                    key = "item",
+                                    value = cardItem,
+                                )
+                                navController.navigate(Routes.DETAILS_ROUTE)
+                            })
                         }
                     }
                 }
@@ -109,12 +96,17 @@ fun SearchBar(
     searchQuery: String,
     onSearchQueryChanged: (String) -> Unit,
 ) {
-    Row(modifier = Modifier.fillMaxWidth()) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
         TextField(
             value = searchQuery,
             onValueChange = onSearchQueryChanged,
             modifier = Modifier.weight(1f),
-            label = { Text(text = "Enter search query") }
+            shape = RoundedCornerShape(8.dp),
+            label = { Text(text = "Enter Tag") },
         )
     }
 }
