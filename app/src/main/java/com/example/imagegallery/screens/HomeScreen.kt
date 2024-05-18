@@ -1,9 +1,7 @@
 package com.example.imagegallery.screens
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -13,9 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,9 +23,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.imagegallery.R
 import com.example.imagegallery.data.response.Item
+import com.example.imagegallery.routes.Routes
 import com.example.imagegallery.viewmodels.FlickrResponseState
 import com.example.imagegallery.viewmodels.ImageViewModel
 
@@ -39,13 +37,18 @@ import com.example.imagegallery.viewmodels.ImageViewModel
  */
 @Composable
 fun HomeScreen(
-    imageViewModel: ImageViewModel = hiltViewModel()
+    navController: NavController,
+    imageViewModel: ImageViewModel = hiltViewModel(),
 ) {
     val screenState by imageViewModel.screenState.collectAsState()
     val openAlertDialog = remember { mutableStateOf(false) }
 
     val onItemClicked = { cardItem: Item ->
-        Log.d("ItemClicked", "In card");
+        navController.currentBackStackEntry?.savedStateHandle?.set(
+            key = "item",
+            value = cardItem,
+        )
+        navController.navigate(Routes.DETAILS_ROUTE)
     }
 
     Surface(modifier = Modifier.fillMaxWidth()) {
@@ -83,7 +86,7 @@ fun HomeScreen(
 @Composable
 fun ShowImageCards(
     imageItem: Item,
-    onItemClicked: (Item) -> Int
+    onItemClicked: (Item) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -104,8 +107,6 @@ fun ShowImageCards(
                 placeholder = painterResource(id = R.drawable.ic_launcher_background),
                 error = painterResource(id = R.drawable.ic_launcher_background)
             )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(text = imageItem.title ?: "", style = MaterialTheme.typography.headlineMedium)
         }
     }
 }
