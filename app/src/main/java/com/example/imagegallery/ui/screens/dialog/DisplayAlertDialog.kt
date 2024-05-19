@@ -1,4 +1,4 @@
-package com.example.imagegallery.screens
+package com.example.imagegallery.ui.screens.dialog
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api

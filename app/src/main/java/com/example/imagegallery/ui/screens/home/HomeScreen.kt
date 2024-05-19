@@ -1,4 +1,4 @@
-package com.example.imagegallery.screens
+package com.example.imagegallery.ui.screens.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -30,10 +30,11 @@ import coil.compose.AsyncImage
 import com.example.imagegallery.R
 import com.example.imagegallery.data.response.Item
 import com.example.imagegallery.routes.Routes
+import com.example.imagegallery.ui.screens.load.LoaderScreen
+import com.example.imagegallery.ui.screens.topbar.TopBar
+import com.example.imagegallery.ui.screens.dialog.DisplayAlertDialog
 import com.example.imagegallery.ui.theme.ImageGalleryTheme
 import com.example.imagegallery.utils.ComposePreview
-import com.example.imagegallery.viewmodels.FlickrResponseState
-import com.example.imagegallery.viewmodels.ImageViewModel
 
 /**
  * @author Shahriar

@@ -1,4 +1,4 @@
-package com.example.imagegallery.screens
+package com.example.imagegallery.ui.screens.topbar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

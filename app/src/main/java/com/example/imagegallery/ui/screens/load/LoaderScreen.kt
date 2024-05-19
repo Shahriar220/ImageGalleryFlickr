@@ -1,4 +1,4 @@
-package com.example.imagegallery.screens
+package com.example.imagegallery.ui.screens.load
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
