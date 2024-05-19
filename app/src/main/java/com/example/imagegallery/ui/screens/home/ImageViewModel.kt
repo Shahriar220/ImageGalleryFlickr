@@ -1,4 +1,4 @@
-package com.example.imagegallery.viewmodels
+package com.example.imagegallery.ui.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

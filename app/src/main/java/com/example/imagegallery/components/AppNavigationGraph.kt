@@ -6,8 +6,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.imagegallery.data.response.Item
 import com.example.imagegallery.routes.Routes
-import com.example.imagegallery.screens.DetailsScreen
-import com.example.imagegallery.screens.HomeScreen
+import com.example.imagegallery.ui.screens.details.DetailsScreen
+import com.example.imagegallery.ui.screens.home.HomeScreen
 
 /**
  * @author Shahriar
