@@ -37,6 +37,7 @@ import com.example.imagegallery.R
 import com.example.imagegallery.data.response.Item
 import com.example.imagegallery.data.response.Media
 import com.example.imagegallery.ui.theme.ImageGalleryTheme
+import com.example.imagegallery.utils.ComposePreview
 import com.example.imagegallery.utils.dateTimeConverterUtil
 
 /**
@@ -189,7 +190,7 @@ fun IconRow(
     }
 }
 
-@Preview
+@ComposePreview
 @Composable
 private fun DetailsScreenPreview() {
     ImageGalleryTheme {
