@@ -18,7 +18,7 @@ import com.example.imagegallery.ui.theme.Pink40
  */
 
 @Composable
-fun LoaderScreen() {
+fun LoaderScreen(modifier: Modifier) {
     Column(
         modifier = Modifier
             .fillMaxSize()
