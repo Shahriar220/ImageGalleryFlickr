@@ -17,4 +17,7 @@ interface SearchQueryDao {
 
     @Query("SELECT * FROM search_table ORDER BY id DESC")
     fun getAllQueries(): Flow<List<SearchEntity>>
+
+    @Query("SELECT * FROM search_table WHERE `query` = :query LIMIT 1")
+    suspend fun getSearchQuery(query: String): SearchEntity?
 }

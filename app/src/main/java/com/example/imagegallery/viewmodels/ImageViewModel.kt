@@ -39,7 +39,10 @@ class ImageViewModel @Inject constructor(
 
     fun filterItems(searchText: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            searchQueryDao.insertQuery(SearchEntity(query = searchText))
+            val existingQuery = searchQueryDao.getSearchQuery(searchText)
+            if (existingQuery == null) {
+                searchQueryDao.insertQuery(SearchEntity(query = searchText))
+            }
         }
         _searchText.value = searchText
         val filteredItems = if (searchText.isBlank()) {
