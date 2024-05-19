@@ -13,12 +13,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -27,11 +29,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.text.parseAsHtml
 import coil.compose.AsyncImage
 import com.example.imagegallery.R
 import com.example.imagegallery.data.response.Item
+import com.example.imagegallery.data.response.Media
+import com.example.imagegallery.ui.theme.ImageGalleryTheme
 import com.example.imagegallery.utils.dateTimeConverterUtil
 
 /**
@@ -40,7 +45,8 @@ import com.example.imagegallery.utils.dateTimeConverterUtil
  */
 @Composable
 fun DetailsScreen(
-    item: Item
+    item: Item,
+    onBackPress: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val onDownloadClick = {
@@ -66,20 +72,35 @@ fun DetailsScreen(
     }
 
 
-    Column {
-        DetailsData(item, onEmailClick, onShareClick, onDownloadClick)
+    Scaffold(
+        topBar = {
+            TopBar(
+                title = "Image Details",
+                leadingIcon = Icons.Default.ArrowBack,
+                onLeadingIconClick = onBackPress
+            )
+        }
+    ) { paddingValues ->
+        DetailsData(
+            modifier = Modifier.padding(paddingValues),
+            item = item,
+            onEmailClick = onEmailClick,
+            onShareClick = onShareClick,
+            onDownloadClick = onDownloadClick
+        )
     }
 }
 
 @Composable
 fun DetailsData(
     item: Item,
+    modifier: Modifier = Modifier,
     onEmailClick: () -> Unit,
     onShareClick: () -> Unit,
     onDownloadClick: () -> Unit,
 ) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)
     ) {
@@ -110,7 +131,7 @@ fun DetailsData(
             }
 
             CommonTextView(
-                text = ("Title: " + item.author),
+                text = ("Author: " + item.author),
                 style = MaterialTheme.typography.titleMedium
             )
             CommonTextView(
@@ -118,7 +139,7 @@ fun DetailsData(
                 style = MaterialTheme.typography.bodySmall
             )
             Spacer(modifier = Modifier.height(4.dp))
-            val descriptionText = item.description?.parseAsHtml(0);
+            val descriptionText = item.description?.parseAsHtml(0)
             Text(text = descriptionText.toString())
         }
     }
@@ -164,6 +185,26 @@ fun IconRow(
                 .size(24.dp)
                 .clickable { onEmailClick() },
             tint = MaterialTheme.colorScheme.primary
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun DetailsScreenPreview() {
+    ImageGalleryTheme {
+        DetailsScreen(
+            item = Item(
+                author = "Author",
+                authorId = "author_id",
+                dateTaken = "2024-02-08T17:36:32-08:00",
+                description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+                link = "https:\\/\\/www.flickr.com\\/photos\\/197607119@N07\\/53729929107\\/",
+                media = Media(m = "https:\\/\\/live.staticflickr.com\\/65535\\/53729929107_5115391541_m.jpg"),
+                published = "2024-05-19T06:27:03Z",
+                tags = "",
+                title = "IMG_6424.jpg"
+            )
         )
     }
 }

@@ -24,7 +24,10 @@ fun AppNavigationGraph() {
         composable(Routes.DETAILS_ROUTE) {
             val result = navController.previousBackStackEntry?.savedStateHandle?.get<Item>("item")
             result?.let { item ->
-                DetailsScreen(item = item)
+                DetailsScreen(
+                    item = item,
+                    onBackPress = { navController.navigateUp() }
+                )
             }
         }
     }
