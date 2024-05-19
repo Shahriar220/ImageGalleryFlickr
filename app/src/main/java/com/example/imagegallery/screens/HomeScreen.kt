@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -32,6 +31,7 @@ import com.example.imagegallery.R
 import com.example.imagegallery.data.response.Item
 import com.example.imagegallery.routes.Routes
 import com.example.imagegallery.ui.theme.ImageGalleryTheme
+import com.example.imagegallery.utils.ComposePreview
 import com.example.imagegallery.viewmodels.FlickrResponseState
 import com.example.imagegallery.viewmodels.ImageViewModel
 
@@ -151,7 +151,7 @@ fun ImageCard(
     }
 }
 
-@Preview
+@ComposePreview
 @Composable
 private fun HomeScreenPreview() {
     ImageGalleryTheme {
