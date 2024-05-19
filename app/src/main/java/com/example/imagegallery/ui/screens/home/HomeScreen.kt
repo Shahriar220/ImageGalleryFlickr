@@ -30,9 +30,9 @@ import coil.compose.AsyncImage
 import com.example.imagegallery.R
 import com.example.imagegallery.data.response.Item
 import com.example.imagegallery.routes.Routes
+import com.example.imagegallery.ui.screens.dialog.DisplayAlertDialog
 import com.example.imagegallery.ui.screens.load.LoaderScreen
 import com.example.imagegallery.ui.screens.topbar.TopBar
-import com.example.imagegallery.ui.screens.dialog.DisplayAlertDialog
 import com.example.imagegallery.ui.theme.ImageGalleryTheme
 import com.example.imagegallery.utils.ComposePreview
 
@@ -43,12 +43,12 @@ import com.example.imagegallery.utils.ComposePreview
 @Composable
 fun HomeScreen(
     navController: NavController,
-    imageViewModel: ImageViewModel = hiltViewModel(),
+    homeScreenViewModel: HomeScreenViewModel = hiltViewModel(),
 ) {
-    val screenState by imageViewModel.screenState.collectAsState()
+    val screenState by homeScreenViewModel.screenState.collectAsState()
 
     val onSearchQueryChanged: (String) -> Unit = { query ->
-        imageViewModel.filterItems(query)
+        homeScreenViewModel.filterItems(query)
     }
 
     val onImageClicked: (Item) -> Unit = { item ->

@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ImageViewModel @Inject constructor(
+class HomeScreenViewModel @Inject constructor(
     private val getImageUseCase: GetImageUseCase,
     private val searchQueryDao: SearchQueryDao
 ) : ViewModel() {
