@@ -51,12 +51,10 @@ import com.example.imagegallery.ui.theme.ImageGalleryTheme
 @Composable
 fun TopBar(
     title: String,
-    modifier: Modifier = Modifier,
     leadingIcon: ImageVector? = null,
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = MaterialTheme.colorScheme.onBackground,
     onLeadingIconClick: () -> Unit = {},
-    doneButtonPressed: ((String) -> Unit) = {},
     onQueryChanged: ((String) -> Unit)? = null,
     showBottomSheetIcon: Boolean = true
 ) {
@@ -82,10 +80,7 @@ fun TopBar(
             onDismissRequest = { isSheetOpen = false },
         ) {
             ImageFilter(
-                "Image Gallery",
-                modifier = Modifier,
                 doneButtonPressed,
-                onQueryChanged,
             )
         }
     }

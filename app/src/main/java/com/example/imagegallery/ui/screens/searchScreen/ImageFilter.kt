@@ -43,10 +43,7 @@ import com.example.imagegallery.utils.ComposePreview
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ImageFilter(
-    title: String = "Image Gallery",
-    modifier: Modifier = Modifier,
     doneButtonPressed: (String) -> Unit = {},
-    onQueryChanged: ((String) -> Unit)? = null,
     imageFilterViewModel: ImageFilterViewModel = hiltViewModel()
 ) {
     val searchList by imageFilterViewModel.searchList.collectAsState()
@@ -66,7 +63,6 @@ fun ImageFilter(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { query ->
