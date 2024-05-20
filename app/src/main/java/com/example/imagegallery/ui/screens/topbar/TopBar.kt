@@ -57,7 +57,8 @@ fun TopBar(
     contentColor: Color = MaterialTheme.colorScheme.onBackground,
     onLeadingIconClick: () -> Unit = {},
     doneButtonPressed: ((String) -> Unit) = {},
-    onQueryChanged: ((String) -> Unit)? = null
+    onQueryChanged: ((String) -> Unit)? = null,
+    showBottomSheetIcon: Boolean = true
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var isSearchBarExpanded by remember { mutableStateOf(false) }
@@ -156,15 +157,17 @@ fun TopBar(
                 color = contentColor,
                 modifier = Modifier.weight(1f)
             )
-            IconButton(
-                onClick = { isSheetOpen = true }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.List,
-                    contentDescription = null,
-                    tint = contentColor,
-                    modifier = Modifier.alpha(if (isSearchBarExpanded) 0f else 1f)
-                )
+            if (showBottomSheetIcon) {
+                IconButton(
+                    onClick = { isSheetOpen = true }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.List,
+                        contentDescription = null,
+                        tint = contentColor,
+                        modifier = Modifier.alpha(if (isSearchBarExpanded) 0f else 1f)
+                    )
+                }
             }
         }
 
