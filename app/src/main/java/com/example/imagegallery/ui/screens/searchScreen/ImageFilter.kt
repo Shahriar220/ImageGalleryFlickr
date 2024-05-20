@@ -24,7 +24,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -55,6 +54,10 @@ fun ImageFilter(
 
     val onDeleteIconClicked: (Int) -> (Unit) = { id ->
         imageFilterViewModel.deleteQuery(id)
+    }
+
+    val onItemClicked: (String) -> Unit = { query ->
+        doneButtonPressed.invoke(query)
     }
 
     Column(
@@ -90,24 +93,28 @@ fun ImageFilter(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             searchList.take(4).forEach { searchEntity ->
-                ChipItem(tag = searchEntity.query, id = searchEntity.id, onDeleteIconClicked)
+                ChipItem(
+                    tag = searchEntity.query,
+                    id = searchEntity.id,
+                    onDeleteIconClicked,
+                    onItemClicked
+                )
             }
         }
-
-//        Row(verticalAlignment = Alignment.CenterVertically) {
-//            Text(text = "All Tags")
-//            RadioButton(selected = true, onClick = {})
-//            Text(text = "Any Tag")
-//            RadioButton(selected = false, onClick = {})
-//        }
     }
 }
 
 @Composable
-fun ChipItem(tag: String, id: Int, onDeleteClicked: (Int) -> Unit) {
+fun ChipItem(
+    tag: String,
+    id: Int,
+    onDeleteClicked: (Int) -> Unit,
+    onItemClicked: (String) -> Unit
+) {
     Card(
         modifier = Modifier
             .background(Color.LightGray, CircleShape)
+            .clickable { onItemClicked(tag) }
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(2.dp),
