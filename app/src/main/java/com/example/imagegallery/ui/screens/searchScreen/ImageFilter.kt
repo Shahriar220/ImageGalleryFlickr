@@ -6,6 +6,7 @@ package com.example.imagegallery.ui.screens.searchScreen
  */
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -52,6 +53,11 @@ fun ImageFilter(
     val searchList by imageFilterViewModel.searchList.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
 
+    val onDeleteIconClicked: (Int) -> (Unit) = { id ->
+        // can not delete from main thread
+        //        imageFilterViewModel.deleteQuery(id)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -85,7 +91,7 @@ fun ImageFilter(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             searchList.take(4).forEach { searchEntity ->
-                ChipItem(tag = searchEntity.query)
+                ChipItem(tag = searchEntity.query, id = searchEntity.id, onDeleteIconClicked)
             }
         }
 
@@ -99,7 +105,7 @@ fun ImageFilter(
 }
 
 @Composable
-fun ChipItem(tag: String) {
+fun ChipItem(tag: String, id: Int, onDeleteClicked: (Int) -> Unit) {
     Card(
         modifier = Modifier
             .background(Color.LightGray, CircleShape)
@@ -112,7 +118,11 @@ fun ChipItem(tag: String) {
                 text = tag,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
-            Icon(imageVector = Icons.Default.Close, contentDescription = null)
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = null,
+                modifier = Modifier.clickable { onDeleteClicked(id) }
+            )
         }
     }
 }
