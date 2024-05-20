@@ -47,7 +47,7 @@ import com.example.imagegallery.utils.dateTimeConverterUtil
 @Composable
 fun DetailsScreen(
     item: Item,
-    onBackPress: () -> Unit = {}
+    onBackPress: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val onDownloadClick = {
@@ -78,7 +78,8 @@ fun DetailsScreen(
             TopBar(
                 title = "Image Details",
                 leadingIcon = Icons.Default.ArrowBack,
-                onLeadingIconClick = onBackPress
+                onLeadingIconClick = onBackPress,
+                showBottomSheetIcon = false
             )
         }
     ) { paddingValues ->

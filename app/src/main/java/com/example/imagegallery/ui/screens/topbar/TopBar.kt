@@ -11,10 +11,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -24,9 +27,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -34,6 +39,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.imagegallery.ui.screens.searchScreen.ImageFilter
 import com.example.imagegallery.ui.theme.ImageGalleryTheme
 
 /**
@@ -41,6 +47,7 @@ import com.example.imagegallery.ui.theme.ImageGalleryTheme
  * @since ১৯/৫/২৪ ৭:১৭ PM
  */
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
     title: String,
@@ -49,7 +56,9 @@ fun TopBar(
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = MaterialTheme.colorScheme.onBackground,
     onLeadingIconClick: () -> Unit = {},
-    onQueryChanged: ((String) -> Unit)? = null
+    doneButtonPressed: ((String) -> Unit) = {},
+    onQueryChanged: ((String) -> Unit)? = null,
+    showBottomSheetIcon: Boolean = true
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var isSearchBarExpanded by remember { mutableStateOf(false) }
@@ -58,8 +67,31 @@ fun TopBar(
         onQueryChanged?.invoke("")
     }
     val focusRequester = remember { FocusRequester() }
+
+    var isSheetOpen by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    val doneButtonPressed: (String) -> Unit = { query ->
+        isSheetOpen = false
+        onQueryChanged?.invoke(query)
+    }
+
+    if (isSheetOpen) {
+        ModalBottomSheet(
+            onDismissRequest = { isSheetOpen = false },
+        ) {
+            ImageFilter(
+                "Image Gallery",
+                modifier = Modifier,
+                doneButtonPressed,
+                onQueryChanged,
+            )
+        }
+    }
+
     Row(
-        modifier = modifier
+        modifier = Modifier
             .background(backgroundColor)
             .fillMaxWidth()
             .height(56.dp),
@@ -125,6 +157,18 @@ fun TopBar(
                 color = contentColor,
                 modifier = Modifier.weight(1f)
             )
+            if (showBottomSheetIcon) {
+                IconButton(
+                    onClick = { isSheetOpen = true }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.List,
+                        contentDescription = null,
+                        tint = contentColor,
+                        modifier = Modifier.alpha(if (isSearchBarExpanded) 0f else 1f)
+                    )
+                }
+            }
         }
 
         onQueryChanged?.let {

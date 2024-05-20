@@ -20,4 +20,7 @@ interface SearchQueryDao {
 
     @Query("SELECT * FROM search_table WHERE `query` = :query LIMIT 1")
     suspend fun getSearchQuery(query: String): SearchEntity?
+
+    @Query("DELETE FROM search_table WHERE id = :id")
+    suspend fun deleteFromDb(id: Int)
 }
