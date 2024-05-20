@@ -31,6 +31,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -51,7 +52,7 @@ import com.example.imagegallery.ui.theme.ImageGalleryTheme
 fun TopBar(
     title: String,
     modifier: Modifier = Modifier,
-    leadingIcon: ImageVector? = Icons.Default.List,
+    leadingIcon: ImageVector? = null,
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = MaterialTheme.colorScheme.onBackground,
     onLeadingIconClick: () -> Unit = {},
@@ -60,8 +61,6 @@ fun TopBar(
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var isSearchBarExpanded by remember { mutableStateOf(false) }
-
-
     val resetSearch: () -> Unit = {
         searchQuery = ""
         onQueryChanged?.invoke("")
@@ -91,7 +90,7 @@ fun TopBar(
     }
 
     Row(
-        modifier = modifier
+        modifier = Modifier
             .background(backgroundColor)
             .fillMaxWidth()
             .height(56.dp),
@@ -99,7 +98,7 @@ fun TopBar(
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         leadingIcon?.let {
-            IconButton(onClick = { isSheetOpen = true }) {
+            IconButton(onClick = onLeadingIconClick) {
                 Icon(
                     imageVector = leadingIcon,
                     contentDescription = null,
@@ -157,6 +156,16 @@ fun TopBar(
                 color = contentColor,
                 modifier = Modifier.weight(1f)
             )
+            IconButton(
+                onClick = { isSheetOpen = true }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.List,
+                    contentDescription = null,
+                    tint = contentColor,
+                    modifier = Modifier.alpha(if (isSearchBarExpanded) 0f else 1f)
+                )
+            }
         }
 
         onQueryChanged?.let {
