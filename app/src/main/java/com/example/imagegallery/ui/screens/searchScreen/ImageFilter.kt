@@ -54,8 +54,7 @@ fun ImageFilter(
     var searchQuery by remember { mutableStateOf("") }
 
     val onDeleteIconClicked: (Int) -> (Unit) = { id ->
-        // can not delete from main thread
-        //        imageFilterViewModel.deleteQuery(id)
+        imageFilterViewModel.deleteQuery(id)
     }
 
     Column(
@@ -95,12 +94,12 @@ fun ImageFilter(
             }
         }
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = "All Tags")
-            RadioButton(selected = true, onClick = {})
-            Text(text = "Any Tag")
-            RadioButton(selected = false, onClick = {})
-        }
+//        Row(verticalAlignment = Alignment.CenterVertically) {
+//            Text(text = "All Tags")
+//            RadioButton(selected = true, onClick = {})
+//            Text(text = "Any Tag")
+//            RadioButton(selected = false, onClick = {})
+//        }
     }
 }
 
