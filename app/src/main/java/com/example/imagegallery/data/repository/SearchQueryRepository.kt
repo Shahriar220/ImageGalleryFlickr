@@ -24,7 +24,7 @@ class SearchQueryRepository @Inject constructor(private val searchQueryDao: Sear
         return searchQueryDao.getSearchQuery(query)
     }
 
-    fun deleteFromDb(id: Int) {
+    suspend fun deleteFromDb(id: Int) {
         searchQueryDao.deleteFromDb(id)
     }
 }
