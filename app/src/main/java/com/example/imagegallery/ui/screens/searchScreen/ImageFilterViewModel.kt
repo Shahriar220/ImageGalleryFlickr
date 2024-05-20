@@ -46,7 +46,7 @@ class ImageFilterViewModel @Inject constructor(
         }
     }
 
-    private fun deleteQuery(id: Int) {
+    fun deleteQuery(id: Int) {
         viewModelScope.launch {
             searchQueryRepository.deleteFromDb(id)
         }
