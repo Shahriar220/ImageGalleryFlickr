@@ -22,13 +22,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,30 +55,41 @@ fun TopBar(
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = MaterialTheme.colorScheme.onBackground,
     onLeadingIconClick: () -> Unit = {},
+    doneButtonPressed: ((String) -> Unit) = {},
     onQueryChanged: ((String) -> Unit)? = null
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var isSearchBarExpanded by remember { mutableStateOf(false) }
+
+
     val resetSearch: () -> Unit = {
         searchQuery = ""
         onQueryChanged?.invoke("")
     }
     val focusRequester = remember { FocusRequester() }
 
-    var isBottomSheetVisible by remember { mutableStateOf(false) }
-    val coroutineScope = rememberCoroutineScope()
-    val bottomSheetState = rememberModalBottomSheetState(
-//        initialValue = ModalBottomSheetValue.Hidden,
-        skipPartiallyExpanded = true
-    )
-    if (isBottomSheetVisible) {
+    var isSheetOpen by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    val doneButtonPressed: (String) -> Unit = { query ->
+        isSheetOpen = false
+        onQueryChanged?.invoke(query)
+    }
+
+    if (isSheetOpen) {
         ModalBottomSheet(
-            onDismissRequest = { },
-            sheetState = bottomSheetState
+            onDismissRequest = { isSheetOpen = false },
         ) {
-            ImageFilter()
+            ImageFilter(
+                "Image Gallery",
+                modifier = Modifier,
+                doneButtonPressed,
+                onQueryChanged,
+            )
         }
     }
+
     Row(
         modifier = modifier
             .background(backgroundColor)
@@ -89,7 +99,7 @@ fun TopBar(
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         leadingIcon?.let {
-            IconButton(onClick = { isBottomSheetVisible = true }) {
+            IconButton(onClick = { isSheetOpen = true }) {
                 Icon(
                     imageVector = leadingIcon,
                     contentDescription = null,

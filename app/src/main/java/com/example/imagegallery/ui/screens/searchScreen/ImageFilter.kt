@@ -17,14 +17,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,35 +35,45 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.imagegallery.ui.theme.ImageGalleryTheme
 import com.example.imagegallery.utils.ComposePreview
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ImageFilter(
-    title: String="Image Gallery",
+    title: String = "Image Gallery",
     modifier: Modifier = Modifier,
-    leadingIcon: ImageVector? = null,
-    backgroundColor: Color = MaterialTheme.colorScheme.primary,
-    contentColor: Color = MaterialTheme.colorScheme.onBackground,
-    onLeadingIconClick: () -> Unit = {},
-    onQueryChanged: ((String) -> Unit)? = null
+    doneButtonPressed: (String) -> Unit = {},
+    onQueryChanged: ((String) -> Unit)? = null,
+    imageFilterViewModel: ImageFilterViewModel = hiltViewModel()
 ) {
+    val searchList by imageFilterViewModel.searchList.collectAsState()
+    var searchQuery by remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        var keyword by remember { mutableStateOf("") }
+
         OutlinedTextField(
-            value = keyword,
-            onValueChange = { keyword = it },
+            value = searchQuery,
+            onValueChange = { query ->
+                searchQuery = query
+            },
             modifier = Modifier.fillMaxWidth(),
             label = {
                 Text("Type your tag")
+            }, trailingIcon = {
+                IconButton(onClick = {
+                    imageFilterViewModel.addToDb(searchQuery)
+                    doneButtonPressed.invoke(searchQuery)
+                }) {
+                    Icon(Icons.Default.Done, contentDescription = "Done")
+                }
             }
         )
 
@@ -71,11 +84,9 @@ fun ImageFilter(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            ChipItem(tag = "Bangladesh")
-            ChipItem(tag = "Nature")
-            ChipItem(tag = "Sundarban")
-            ChipItem(tag = "Mangrove Forest")
-            ChipItem(tag = "Royal Bengal Tiger")
+            searchList.take(4).forEach { searchEntity ->
+                ChipItem(tag = searchEntity.query)
+            }
         }
 
         Row(verticalAlignment = Alignment.CenterVertically) {

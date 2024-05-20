@@ -3,8 +3,6 @@ package com.example.imagegallery.ui.screens.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.imagegallery.data.response.Item
-import com.example.imagegallery.database.dao.SearchQueryDao
-import com.example.imagegallery.database.entity.SearchEntity
 import com.example.imagegallery.domain.usecase.GetImageUseCase
 import com.example.imagegallery.utils.ResourceState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +16,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
     private val getImageUseCase: GetImageUseCase,
-    private val searchQueryDao: SearchQueryDao
 ) : ViewModel() {
 
     private val _screenState: MutableStateFlow<FlickrResponseState> =
@@ -26,10 +23,6 @@ class HomeScreenViewModel @Inject constructor(
     val screenState: StateFlow<FlickrResponseState> = _screenState.asStateFlow()
 
     private val _searchText = MutableStateFlow("")
-    val searchText: StateFlow<String> = _searchText.asStateFlow()
-
-    private val _isSearching = MutableStateFlow(false)
-    val isSearching: StateFlow<Boolean> = _isSearching.asStateFlow()
 
     private lateinit var allItems: List<Item>
 
@@ -38,15 +31,6 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     fun filterItems(searchText: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            if (searchText.isNotBlank()) {
-                val existingQuery =
-                    searchQueryDao.getSearchQuery(searchText.isNotBlank().toString())
-                if (existingQuery == null) {
-                    searchQueryDao.insertQuery(SearchEntity(query = searchText))
-                }
-            }
-        }
         _searchText.value = searchText
         val filteredItems = if (searchText.isBlank()) {
             allItems
