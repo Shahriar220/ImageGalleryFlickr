@@ -19,30 +19,5 @@ class ImageFilterViewModel @Inject constructor(
     private val roomDbUseCase: RoomDbUseCase
 ) : ViewModel() {
 
-    private val _searchList = MutableStateFlow<List<SearchEntity>>(emptyList())
-    val searchList: StateFlow<List<SearchEntity>> get() = _searchList
 
-    init {
-        getAllQueries()
-    }
-
-    private fun getAllQueries() {
-        viewModelScope.launch {
-            roomDbUseCase.getAll().collect { searches ->
-                _searchList.value = searches
-            }
-        }
-    }
-
-    fun addToDb(query: String) {
-        viewModelScope.launch {
-            roomDbUseCase.addToDb(query)
-        }
-    }
-
-    fun deleteQuery(id: Int) {
-        viewModelScope.launch {
-            roomDbUseCase.deleteFromDb(id)
-        }
-    }
 }

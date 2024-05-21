@@ -27,7 +27,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,7 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.imagegallery.domain.model.SearchEntity
 import com.example.imagegallery.ui.theme.ImageGalleryTheme
 import com.example.imagegallery.utils.ComposePreview
 
@@ -44,19 +43,15 @@ import com.example.imagegallery.utils.ComposePreview
 @Composable
 fun ImageFilter(
     doneButtonPressed: (String) -> Unit = {},
-    imageFilterViewModel: ImageFilterViewModel = hiltViewModel()
+    deleteButtonPressed: (Int) -> Unit = {},
+    onItemClicked: (String) -> Unit,
+    searchList: List<SearchEntity>?
 ) {
-    val searchList by imageFilterViewModel.searchList.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
 
     val onDeleteIconClicked: (Int) -> (Unit) = { id ->
-        imageFilterViewModel.deleteQuery(id)
+        deleteButtonPressed.invoke(id)
     }
-
-    val onItemClicked: (String) -> Unit = { query ->
-        doneButtonPressed.invoke(query)
-    }
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -73,7 +68,6 @@ fun ImageFilter(
                 Text("Search By Tag")
             }, trailingIcon = {
                 IconButton(onClick = {
-                    imageFilterViewModel.addToDb(searchQuery)
                     doneButtonPressed.invoke(searchQuery)
                 }) {
                     Icon(Icons.Default.Done, contentDescription = "Done")
@@ -88,11 +82,11 @@ fun ImageFilter(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            searchList.take(4).forEach { searchEntity ->
+            searchList?.take(4)?.forEach { searchEntity ->
                 ChipItem(
                     tag = searchEntity.query,
                     id = searchEntity.id,
-                    onDeleteIconClicked,
+                    onDeleteClicked = onDeleteIconClicked,
                     onItemClicked
                 )
             }
@@ -134,7 +128,12 @@ fun ChipItem(
 private fun ImageFilterPreview() {
     ImageGalleryTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
-            ImageFilter()
+            ImageFilter(
+                doneButtonPressed = {},
+                deleteButtonPressed = {},
+                onItemClicked = {},
+                searchList = null,
+            )
         }
     }
 }
