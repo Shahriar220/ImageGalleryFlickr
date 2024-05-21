@@ -54,7 +54,7 @@ fun GalleryScreen(
     }
 
     val doneButtonPressed: (String) -> Unit = { query ->
-        galleryViewModel.addToDb(query);
+        galleryViewModel.addToDb(query)
         galleryViewModel.getImageData(query)
     }
 
@@ -64,6 +64,10 @@ fun GalleryScreen(
 
     val onSelectedItemClicked: (String) -> Unit = { query ->
         galleryViewModel.getImageData(query)
+    }
+
+    val onDismissButtonClick: () -> Unit = {
+        galleryViewModel.getImageData("")
     }
 
     val onImageClicked: (Item) -> Unit = { item ->
@@ -80,7 +84,8 @@ fun GalleryScreen(
         deleteButtonPressed = deleteButtonPressed,
         onSelectedItemClicked = onSelectedItemClicked,
         onImageClicked = onImageClicked,
-        searchListEntities = searchList
+        searchListEntities = searchList,
+        onDismissButtonClicked = onDismissButtonClick
     )
 }
 
@@ -92,7 +97,8 @@ fun GalleryScreen(
     deleteButtonPressed: (Int) -> Unit = {},
     onSelectedItemClicked: (String) -> Unit = {},
     onImageClicked: (Item) -> Unit = {},
-    searchListEntities: List<SearchEntity>
+    searchListEntities: List<SearchEntity>,
+    onDismissButtonClicked: () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -113,7 +119,7 @@ fun GalleryScreen(
 
             is FlickrResponseState.Error -> {
                 DisplayAlertDialog(
-                    onDismissRequest = { },
+                    onDismissRequest = onDismissButtonClicked,
                     dialogTitle = "Error",
                     dialogText = screenState.errorMessage,
                     icon = Icons.Default.Info
