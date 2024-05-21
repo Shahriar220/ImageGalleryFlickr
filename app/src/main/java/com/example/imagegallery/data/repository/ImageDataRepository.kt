@@ -12,7 +12,7 @@ import javax.inject.Inject
 class ImageDataRepository @Inject constructor(
     private val imageDataSource: ImageDataSource
 ) {
-    suspend fun getImageData(): ResourceState<FlickrResponse> {
-        return imageDataSource.getImageData()
+    suspend fun getImageData(tag:String): ResourceState<FlickrResponse> {
+        return imageDataSource.getImageData(tag)
     }
 }

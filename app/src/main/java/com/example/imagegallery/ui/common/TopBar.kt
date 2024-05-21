@@ -39,6 +39,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.imagegallery.domain.model.SearchEntity
 import com.example.imagegallery.ui.theme.ImageGalleryTheme
 
 /**
@@ -55,7 +56,11 @@ fun TopBar(
     contentColor: Color = MaterialTheme.colorScheme.onBackground,
     onLeadingIconClick: () -> Unit = {},
     onQueryChanged: ((String) -> Unit)? = null,
-    showBottomSheetIcon: Boolean = true
+    showBottomSheetIcon: Boolean = true,
+    doneButtonPressed: (String) -> Unit = {},
+    deleteButtonPressed: (Int) -> Unit = {},
+    onSelectedItemClicked: (String) -> Unit,
+    searchList: List<SearchEntity>?
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var isSearchBarExpanded by remember { mutableStateOf(false) }
@@ -69,9 +74,9 @@ fun TopBar(
         mutableStateOf(false)
     }
 
-    val doneButtonPressed: (String) -> Unit = { query ->
+    val doneButtonClicked: (String) -> Unit = { query ->
         isSheetOpen = false
-        onQueryChanged?.invoke(query)
+        doneButtonPressed.invoke(query)
     }
 
     if (isSheetOpen) {
@@ -79,7 +84,10 @@ fun TopBar(
             onDismissRequest = { isSheetOpen = false },
         ) {
             ImageFilter(
-                doneButtonPressed,
+                doneButtonClicked,
+                deleteButtonPressed,
+                onSelectedItemClicked,
+                searchList = searchList
             )
         }
     }
@@ -195,9 +203,21 @@ private fun TopBarPreview() {
                 TopBar(
                     title = "Flickr Gallery",
                     leadingIcon = Icons.Default.ArrowBack,
-                    onQueryChanged = {}
+                    onQueryChanged = {},
+                    doneButtonPressed = {},
+                    deleteButtonPressed = {},
+                    onSelectedItemClicked = {},
+                    searchList = null
                 )
-                TopBar(title = "Details")
+                TopBar(
+                    title = "Details",
+                    leadingIcon = Icons.Default.ArrowBack,
+                    onQueryChanged = {},
+                    doneButtonPressed = {},
+                    deleteButtonPressed = {},
+                    onSelectedItemClicked = {},
+                    searchList = null
+                )
             }
         }
     }

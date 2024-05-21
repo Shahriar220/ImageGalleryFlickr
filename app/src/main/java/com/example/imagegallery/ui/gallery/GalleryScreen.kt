@@ -28,8 +28,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.imagegallery.R
-import com.example.imagegallery.data.response.Item
 import com.example.imagegallery.constants.Routes
+import com.example.imagegallery.data.response.Item
+import com.example.imagegallery.domain.model.SearchEntity
 import com.example.imagegallery.ui.common.DisplayAlertDialog
 import com.example.imagegallery.ui.common.LoaderScreen
 import com.example.imagegallery.ui.common.TopBar
@@ -46,9 +47,23 @@ fun GalleryScreen(
     galleryViewModel: GalleryViewModel = hiltViewModel(),
 ) {
     val screenState by galleryViewModel.screenState.collectAsState()
+    val searchList by galleryViewModel.searchList.collectAsState()
 
     val onSearchQueryChanged: (String) -> Unit = { query ->
         galleryViewModel.filterItems(query)
+    }
+
+    val doneButtonPressed: (String) -> Unit = { query ->
+        galleryViewModel.addToDb(query);
+        galleryViewModel.getImageData(query)
+    }
+
+    val deleteButtonPressed: (Int) -> Unit = { id ->
+        galleryViewModel.deleteQuery(id)
+    }
+
+    val onSelectedItemClicked: (String) -> Unit = { query ->
+        galleryViewModel.getImageData(query)
     }
 
     val onImageClicked: (Item) -> Unit = { item ->
@@ -61,7 +76,11 @@ fun GalleryScreen(
     GalleryScreen(
         screenState = screenState,
         onSearchQueryChanged = onSearchQueryChanged,
-        onImageClicked = onImageClicked
+        doneButtonPressed = doneButtonPressed,
+        deleteButtonPressed = deleteButtonPressed,
+        onSelectedItemClicked = onSelectedItemClicked,
+        onImageClicked = onImageClicked,
+        searchListEntities = searchList
     )
 }
 
@@ -69,13 +88,21 @@ fun GalleryScreen(
 fun GalleryScreen(
     screenState: FlickrResponseState,
     onSearchQueryChanged: (String) -> Unit = {},
-    onImageClicked: (Item) -> Unit = {}
+    doneButtonPressed: (String) -> Unit = {},
+    deleteButtonPressed: (Int) -> Unit = {},
+    onSelectedItemClicked: (String) -> Unit = {},
+    onImageClicked: (Item) -> Unit = {},
+    searchListEntities: List<SearchEntity>
 ) {
     Scaffold(
         topBar = {
             TopBar(
                 title = "Flickr Gallery",
-                onQueryChanged = onSearchQueryChanged
+                onQueryChanged = onSearchQueryChanged,
+                doneButtonPressed = doneButtonPressed,
+                deleteButtonPressed = deleteButtonPressed,
+                onSelectedItemClicked = onSelectedItemClicked,
+                searchList = searchListEntities
             )
         }
     ) { paddingValues ->
@@ -159,7 +186,13 @@ private fun HomeScreenPreview() {
         GalleryScreen(
             screenState = FlickrResponseState.Success(
                 data = emptyList()
-            )
+            ),
+            onSearchQueryChanged = {},
+            doneButtonPressed = { },
+            deleteButtonPressed = { },
+            onSelectedItemClicked = { },
+            onImageClicked = { },
+            searchListEntities = emptyList()
         )
     }
 }

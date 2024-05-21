@@ -13,7 +13,7 @@ import javax.inject.Inject
 class GetImageUseCase @Inject constructor(
     private val imageDataRepository: ImageDataRepository
 ) {
-    suspend operator fun invoke(): ResourceState<FlickrResponse> {
-        return imageDataRepository.getImageData()
+    suspend operator fun invoke(tag: String): ResourceState<FlickrResponse> {
+        return imageDataRepository.getImageData(tag)
     }
 }
