@@ -17,8 +17,8 @@ class ImageDataSourceServiceImpl @Inject constructor(
     private val apiService: FlickrApiService
 ) : ImageDataSource {
 
-    override suspend fun getImageData(): ResourceState<FlickrResponse> = toResourceState(
-        makeRequest = { apiService.getPublicPhotos() },
+    override suspend fun getImageData(tag: String): ResourceState<FlickrResponse> = toResourceState(
+        makeRequest = { apiService.getPublicPhotos(tag) },
         parseResponse = { json -> Gson().fromJson(json, FlickrResponse::class.java) }
     )
 

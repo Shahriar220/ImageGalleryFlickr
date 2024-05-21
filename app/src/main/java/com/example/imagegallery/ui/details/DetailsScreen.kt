@@ -79,7 +79,9 @@ fun DetailsScreen(
                 title = "Image Details",
                 leadingIcon = Icons.Default.ArrowBack,
                 onLeadingIconClick = onBackPress,
-                showBottomSheetIcon = false
+                showBottomSheetIcon = false,
+                onSelectedItemClicked = {},
+                searchList = emptyList()
             )
         }
     ) { paddingValues ->

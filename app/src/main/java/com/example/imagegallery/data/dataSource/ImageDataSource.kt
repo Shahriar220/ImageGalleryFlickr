@@ -8,5 +8,5 @@ import com.example.imagegallery.utils.ResourceState
  * @since ১৭/৫/২৪ ১২:৩৫ PM
  */
 interface ImageDataSource {
-    suspend fun getImageData(): ResourceState<FlickrResponse>
+    suspend fun getImageData(tag:String): ResourceState<FlickrResponse>
 }
