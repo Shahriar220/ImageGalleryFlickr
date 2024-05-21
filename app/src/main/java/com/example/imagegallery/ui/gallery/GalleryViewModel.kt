@@ -43,7 +43,13 @@ class GalleryViewModel @Inject constructor(
             allItems
         } else {
             allItems.filter { item ->
-                item.tags?.contains(searchText, ignoreCase = true) == true
+                val containsSearchTextInTitle =
+                    item.title?.contains(searchText, ignoreCase = true) ?: false
+                val containsSearchTextInAuthor =
+                    item.author?.contains(searchText, ignoreCase = true) ?: false
+                val containsSearchTextInLink =
+                    item.link?.contains(searchText, ignoreCase = true) ?: false
+                containsSearchTextInTitle || containsSearchTextInAuthor || containsSearchTextInLink
             }
         }
         _screenState.value = FlickrResponseState.Success(filteredItems)
