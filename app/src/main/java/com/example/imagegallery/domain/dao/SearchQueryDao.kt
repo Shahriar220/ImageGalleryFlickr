@@ -1,9 +1,9 @@
-package com.example.imagegallery.database.dao
+package com.example.imagegallery.domain.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.example.imagegallery.database.entity.SearchEntity
+import com.example.imagegallery.domain.model.SearchEntity
 import kotlinx.coroutines.flow.Flow
 
 /**

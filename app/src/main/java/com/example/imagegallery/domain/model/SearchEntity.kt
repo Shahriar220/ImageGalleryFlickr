@@ -1,4 +1,4 @@
-package com.example.imagegallery.database.entity
+package com.example.imagegallery.domain.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

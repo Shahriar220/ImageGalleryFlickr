@@ -1,9 +1,9 @@
-package com.example.imagegallery.database
+package com.example.imagegallery.domain
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.imagegallery.database.dao.SearchQueryDao
-import com.example.imagegallery.database.entity.SearchEntity
+import com.example.imagegallery.domain.dao.SearchQueryDao
+import com.example.imagegallery.domain.model.SearchEntity
 
 /**
  * @author Shahriar
