@@ -1,4 +1,4 @@
-package com.example.imagegallery.routes
+package com.example.imagegallery.constants
 
 /**
  * @author Shahriar

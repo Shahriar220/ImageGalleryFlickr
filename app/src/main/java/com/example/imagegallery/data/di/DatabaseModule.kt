@@ -2,8 +2,8 @@ package com.example.imagegallery.data.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.imagegallery.database.AppDatabase
-import com.example.imagegallery.database.dao.SearchQueryDao
+import com.example.imagegallery.domain.AppDatabase
+import com.example.imagegallery.domain.dao.SearchQueryDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

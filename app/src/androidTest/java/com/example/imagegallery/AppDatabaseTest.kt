@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.imagegallery.database.AppDatabase
-import com.example.imagegallery.database.dao.SearchQueryDao
-import com.example.imagegallery.database.entity.SearchEntity
+import com.example.imagegallery.domain.AppDatabase
+import com.example.imagegallery.domain.dao.SearchQueryDao
+import com.example.imagegallery.domain.model.SearchEntity
 import junit.framework.TestCase.assertEquals
 import okio.IOException
 import org.junit.After

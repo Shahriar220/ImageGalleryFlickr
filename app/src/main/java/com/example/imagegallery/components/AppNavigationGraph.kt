@@ -5,9 +5,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.imagegallery.data.response.Item
-import com.example.imagegallery.routes.Routes
-import com.example.imagegallery.ui.screens.details.DetailsScreen
-import com.example.imagegallery.ui.screens.home.HomeScreen
+import com.example.imagegallery.constants.Routes
+import com.example.imagegallery.ui.details.DetailsScreen
+import com.example.imagegallery.ui.gallery.GalleryScreen
 
 /**
  * @author Shahriar
@@ -19,7 +19,7 @@ fun AppNavigationGraph() {
 
     NavHost(navController = navController, startDestination = Routes.HOME_ROUTE) {
         composable(Routes.HOME_ROUTE) {
-            HomeScreen(navController)
+            GalleryScreen(navController)
         }
         composable(Routes.DETAILS_ROUTE) {
             val result = navController.previousBackStackEntry?.savedStateHandle?.get<Item>("item")

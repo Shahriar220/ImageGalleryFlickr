@@ -11,7 +11,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class FlickrResponse(
     val title: String?,
-    val lint: String?,
+    val link: String?,
     val description: String?,
     val modified: String?,
     val items: List<Item>?
